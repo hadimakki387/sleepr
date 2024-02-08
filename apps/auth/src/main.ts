@@ -1,16 +1,20 @@
 import { NestFactory } from '@nestjs/core';
-import { ReservationsModule } from './reservations.module';
+import { AuthModule } from './auth.module';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import { ConfigService } from '@nestjs/config';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(ReservationsModule);
+  const app = await NestFactory.create(AuthModule);
+  app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useLogger(app.get(Logger));
   const configService = app.get(ConfigService);
-  await app.listen(configService.get('RESERVATION_PORT')).then(() => {
-    console.log('Reservations service started on port 3000');
+  await app.listen(configService.get('AUTH_PORT')).then(() => {
+    console.log(
+      'Auth service started on port ' + configService.get('AUTH_PORT'),
+    );
   });
 }
 bootstrap();

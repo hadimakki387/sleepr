@@ -1,0 +1,3 @@
+{
+  "security.allowedUNCHosts": ["\\\\wsl.localhost\\docker", "wsl.localhost", "wsl$"]
+}
