@@ -4,6 +4,7 @@ import { UserSchema, UsersDocument } from './models/user.schema';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { UsersRepository } from './users.respository';
+import { JwtStrategy } from '../strategies/jwt.startegy';
 
 @Module({
   imports: [
