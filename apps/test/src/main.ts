@@ -1,29 +1,28 @@
 import { NestFactory } from '@nestjs/core';
-import { AuthModule } from './auth.module';
+import { TestModule } from './test.module';
+import { ConfigService } from '@nestjs/config';
+import { Transport } from '@nestjs/microservices';
+import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
-import { ConfigService } from '@nestjs/config';
-import * as cookieParser from 'cookie-parser';
-import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AuthModule);
+  const app = await NestFactory.create(TestModule);
   const configService = app.get(ConfigService);
   app.connectMicroservice({
     transport: Transport.TCP,
     options: {
       host:'0.0.0.0',
-      port: configService.get('AUTH_TCP_PORT')
+      port: 3011
     },
   });
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useLogger(app.get(Logger));
   await app.startAllMicroservices()
-  console.log(configService.get('AUTH_HTTP_PORT'))
-  await app.listen(3001).then(() => {
+  await app.listen(3010).then(() => {
     console.log(
-      'Auth service started on port ' + configService.get('AUTH_PORT'),
+      'Auth service started on port ' + 3010,
     );
   });
 }
